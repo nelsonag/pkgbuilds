@@ -1,0 +1,36 @@
+--- Makefile	2013-06-26 12:23:59.739533400 -0400
++++ Makefile2	2013-06-26 12:27:41.782869150 -0400
+@@ -235,18 +235,30 @@
+ 	$(F90) $(objects) $(templates) $(xml_fort) $(LDFLAGS) -o $@
+ install:
+ 	@install -D $(program) $(DESTDIR)$(prefix)/bin/$(program)
++	@install -D utils/convert_xsdir.py $(DESTDIR)$(prefix)/bin/convert_xsdir
++	@install -D utils/convert_xsdata.py $(DESTDIR)$(prefix)/bin/convert_xsdata
+ 	@install -D utils/statepoint_cmp.py $(DESTDIR)$(prefix)/bin/statepoint_cmp
++	@install -D utils/statepoint.py $(DESTDIR)$(prefix)/lib/python2.7/$(program)/statepoint.py
+ 	@install -D utils/statepoint_histogram.py $(DESTDIR)$(prefix)/bin/statepoint_histogram
+ 	@install -D utils/statepoint_meshplot.py $(DESTDIR)$(prefix)/bin/statepoint_meshplot
+ 	@install -D ../man/man1/openmc.1 $(DESTDIR)$(prefix)/share/man/man1/openmc.1
+-	@install -D ../LICENSE $(DESTDIR)$(prefix)/share/doc/$(program)/copyright
+-uninstall:
++	@install -D ../LICENSE $(DESTDIR)$(prefix)/share/licenses/$(program)/LICENSE
++	@install -D ../data/cross_sections.xml $(DESTDIR)/etc/$(program)/cross_sections.xml
++	@install -D ../data/cross_sections_ascii.xml $(DESTDIR)/etc/$(program)/cross_sections_ascii.xml
++	@install -D ../data/cross_sections_serpent.xml $(DESTDIR)/etc/$(program)/cross_sections_serpent.xml
++ uninstall:
+ 	@rm $(DESTDIR)$(prefix)/bin/$(program)
+ 	@rm $(DESTDIR)$(prefix)/bin/statepoint_cmp
+ 	@rm $(DESTDIR)$(prefix)/bin/statepoint_histogram
+ 	@rm $(DESTDIR)$(prefix)/bin/statepoint_meshplot
++	@rm $(DESTDIR)$(prefix)/lib/python2.7/$(program)/statepoint.py
++	@rm $(DESTDIR)$(prefix)/bin/convert_xsdir
++	@rm $(DESTDIR)$(prefix)/bin/convert_xsdata
+ 	@rm $(DESTDIR)$(prefix)/share/man/man1/openmc.1
+-	@rm $(DESTDIR)$(prefix)/share/doc/$(program)/copyright
++	@rm $(DESTDIR)$(prefix)/share/licenses/$(program)/LICENSE
++	@rm $(DESTDIR)/etc/$(program)/cross_sections.xml
++	@rm $(DESTDIR)/etc/$(program)/cross_sections_ascii.xml
++	@rm $(DESTDIR)/etc/$(program)/cross_sections_serpent.xml
+ distclean: clean
+ 	cd xml-fortran; make clean
+ 	cd templates; make clean
