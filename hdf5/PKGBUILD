@@ -4,39 +4,45 @@
 # Contributor: damir <damir@archlinux.org>
 # Contributor: Tom K <tomk@runbox.com>
 
-pkgname=hdf5-cpp-fortran
+pkgname=hdf5-cpp-fortran-mpich2
 _pkgname=hdf5
-pkgver=1.8.10_patch1
+_prefix=/opt/mpich2
+_mpirun=${_prefix}/bin/mpiexec
+pkgver=1.8.12
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="General purpose library and file format for storing scientific data"
 url="http://www.hdfgroup.org/HDF5/"
 license=('custom')
-depends=('zlib' 'sh' 'gcc-libs')
+depends=('zlib' 'sh' 'mpich2' 'gcc-libs')
 makedepends=('time' 'gcc-fortran')
-conflicts=('hdf5')
-provides=('hdf5')
+#conflicts=('hdf5')
+#provides=('hdf5')
 groups=('modified')
-source=(ftp://ftp.hdfgroup.org/HDF5/prev-releases/${_pkgname}-${pkgver/_/-}/src/${_pkgname}-${pkgver/_/-}.tar.bz2)
-options=('!libtool')
-sha1sums=('458cb91496e313debd55d52a7f89459a5469cceb')
+source=(ftp://ftp.hdfgroup.org/HDF5/releases/${_pkgname}-${pkgver/_/-}/src/${_pkgname}-${pkgver/_/-}.tar.bz2)
+options=('!libtool' 'staticlibs')
+md5sums=('03ad766d225f5e872eb3e5ce95524a08')
 
 build() {
   cd $srcdir/${_pkgname}-${pkgver/_/-}
-  export CFLAGS="${CFLAGS/O2/O0}"
-  export CXXFLAGS="${CFLAGS}"
-  export FCFLAGS="${CFLAGS}"
-  ./configure --prefix=/usr \
-    --enable-hl \
-    --enable-cxx \
-    --enable-fortran \
-    --enable-fortran2003 \
-    --enable-linux-lfs \
-    --enable-production \
-    --with-pic \
-    --docdir=/usr/share/doc/hdf5/ \
-    --with-pthread=/usr/lib/ \
-    --disable-sharedlib-rpath
+  unset CFLAGS
+  unset CXXFLAGS
+  ./configure \
+         FC=${_prefix}/bin/mpif90 \
+         F9X=${_prefix}/bin/mpif90 FFLAGS="-I${_prefix}/include" \
+         CC=${_prefix}/bin/mpicc CXX=${_prefix}/bin/mpicxx \
+         RUNSERIAL="${_mpirun} -n 1" RUNPARALLEL="${_mpirun} -n $$NPROCS" \
+          --prefix=${_prefix} \
+          --enable-parallel \
+          --enable-hl \
+          --enable-linux-lfs \
+          --enable-production \
+          --enable-fortran \
+          --enable-fortran2003 \
+          --enable-shared \
+          --with-pic \
+          --docdir=${_prefix}/share/${_pkgname} \
+          --with-pthread=/usr/lib
   make
 }
 
@@ -47,6 +53,6 @@ package() {
 
   install -d -m755 $pkgdir/usr/share/licenses/${pkgname}
   install -m644 $srcdir/${_pkgname}-${pkgver/_/-}/COPYING \
-          $pkgdir/usr/share/licenses/${pkgname}/LICENSE 
+          $pkgdir/usr/share/licenses/${pkgname}/LICENSE
 }
 
