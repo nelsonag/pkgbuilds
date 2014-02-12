@@ -1,7 +1,7 @@
 # Maintainer: Myles English <myles at rockhead dot biz>
 pkgname=petsc
 pkgver=3.4.3
-pkgrel=1
+pkgrel=2
 _config=arch-linux2-cxx-opt
 # if --with-debugging=yes is set then PETSC_ARCH is automatically set to
 #"arch-linux2-cxx-debug" for some things, so the _config should be changed too
@@ -10,9 +10,9 @@ pkgdesc="Portable, extensible toolkit for scientific computation"
 arch=('any')
 url="http://www.mcs.anl.gov/petsc/petsc-as"
 license=('MIT compatible')
+options=('staticlibs')
 depends=('python2' 'openmpi' 'boost' 'blas' 'lapack')
 makedepends=('gcc' 'gcc-fortran')
-options=('staticlibs')
 install=petsc.install
 source=(http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${pkgname}-${pkgver/_/-}.tar.gz)
 md5sums=('db40d8f811f5445ac510dc85ae738573')
@@ -66,6 +66,7 @@ package() {
 	export PETSC_DIR=${_build_dir}
 	make ${MAKEFLAGS} PETSC_DIR=${_build_dir} PETSC_ARCH=${_config} install # > /dev/null
 
+	sed -i 's#'"${pkgdir}"'##g' "${pkgdir}${_install_dir}/lib/pkgconfig/PETSc.pc"
 	sed -i 's#'"${pkgdir}"'##g' "${pkgdir}${_install_dir}/conf/variables"
 	sed -i 's#'"${pkgdir}"'##g' "${pkgdir}${_install_dir}/conf/petscvariables"
 	sed -i 's#'"${pkgdir}"'##g' "${pkgdir}${_install_dir}/conf/rules"
