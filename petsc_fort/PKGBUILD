@@ -1,5 +1,6 @@
 # Maintainer: Myles English <myles at rockhead dot biz>
-pkgname=petsc
+pkgname=petsc_fort
+_pkgname=petsc
 pkgver=3.4.3
 pkgrel=2
 _config=arch-linux2-cxx-opt
@@ -11,10 +12,11 @@ arch=('any')
 url="http://www.mcs.anl.gov/petsc/petsc-as"
 license=('MIT compatible')
 options=('staticlibs')
+provides=('petsc')
 depends=('python2' 'openmpi' 'boost' 'blas' 'lapack')
 makedepends=('gcc' 'gcc-fortran')
 install=petsc.install
-source=(http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${pkgname}-${pkgver/_/-}.tar.gz)
+source=(http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${_pkgname}-${pkgver/_/-}.tar.gz)
 md5sums=('db40d8f811f5445ac510dc85ae738573')
 
 _install_dir=/opt/petsc/${_config}
@@ -23,7 +25,7 @@ _install_dir=/opt/petsc/${_config}
 export MAKEFLAGS="-j1"
 
 build() {
-	_build_dir="${srcdir}/${pkgname}-${pkgver/_/-}"
+	_build_dir="${srcdir}/${_pkgname}-${pkgver/_/-}"
 
 	cd ${_build_dir}
 	#patch -Np1 -i ${startdir}/patch_debug.diff
@@ -60,7 +62,7 @@ build() {
 }
 
 package() {
-	_build_dir="${srcdir}/${pkgname}-${pkgver/_/-}"
+	_build_dir="${srcdir}/${_pkgname}-${pkgver/_/-}"
 	cd ${_build_dir}
 	echo "make ${MAKEFLAGS} PETSC_DIR=${_build_dir} PETSC_ARCH=${_config} install"
 	export PETSC_DIR=${_build_dir}
@@ -80,22 +82,22 @@ package() {
 	# not perfect yet
 
 	# documentation
-	mkdir -p ${pkgdir}/usr/share/doc/$pkgname/
-	cp -r ${_build_dir}/docs ${pkgdir}/usr/share/doc/$pkgname/
+	mkdir -p ${pkgdir}/usr/share/doc/$_pkgname/
+	cp -r ${_build_dir}/docs ${pkgdir}/usr/share/doc/$_pkgname/
 
 	# tutorials
-	cp -r ${_build_dir}/tutorials ${pkgdir}/usr/share/doc/$pkgname/
+	cp -r ${_build_dir}/tutorials ${pkgdir}/usr/share/doc/$_pkgname/
 
 	# src for tutorials
-	cp -r ${_build_dir}/src ${pkgdir}/usr/share/doc/$pkgname/
+	cp -r ${_build_dir}/src ${pkgdir}/usr/share/doc/$_pkgname/
 
 	# html versions of header files
-	mkdir -p ${pkgdir}/usr/share/doc/$pkgname/include
-	cp -r ${_build_dir}/include/*.html ${pkgdir}/usr/share/doc/$pkgname/include/
+	mkdir -p ${pkgdir}/usr/share/doc/$_pkgname/include
+	cp -r ${_build_dir}/include/*.html ${pkgdir}/usr/share/doc/$_pkgname/include/
 
 	# install licenCe (even though there is no such word as licenSes)
 	mkdir -p ${pkgdir}/usr/share/licenses/petsc
-	cp ${_build_dir}/docs/copyright.html ${pkgdir}/usr/share/licenses/$pkgname/
+	cp ${_build_dir}/docs/copyright.html ${pkgdir}/usr/share/licenses/$_pkgname/
 
 	mkdir -p ${pkgdir}/etc/profile.d
 	echo "export PETSC_DIR=${_install_dir}" > ${pkgdir}/etc/profile.d/petsc.sh
