@@ -36,7 +36,7 @@ build() {
 	find ${srcdir} -name "*" -type f -exec \
 	sed -i 's#\(/usr/bin/env \|/usr/bin/\)python[2-3]*#\1python2#' {} \;
 
-	CONFOPTS="--with-shared-libraries=0 --with-clanguage=C++ --COPTFLAGS=-O2 --CXXOPTFLAGS=-O2"
+	CONFOPTS="--with-shared-libraries --with-clanguage=C++ --COPTFLAGS=-O2 --CXXOPTFLAGS=-O2"
 	CONFOPTS="${CONFOPTS} --with-fortran-datatypes --FOPTFLAGS=-O2"
 
 	# External downloads
