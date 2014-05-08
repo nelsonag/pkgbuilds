@@ -6,7 +6,7 @@
 # Contributor: Jed Brown <jed@59A2.org>
 # Contributor: Simone Pezzuto <junki.gnu@gmail.com>
 
-pkgname=hdf5-openmpi
+pkgname=hdf5-openmpi-fortran
 _pkgname=hdf5
 pkgver=1.8.12
 pkgrel=1
@@ -16,8 +16,8 @@ url="http://www.hdfgroup.org/HDF5/"
 license=('custom')
 depends=('zlib' 'sh' 'openmpi')
 makedepends=('time')
-provides=('hdf5')
-conflicts=('hdf5')
+provides=('hdf5' 'hdf5-openmpi')
+conflicts=('hdf5' 'hdf5-openmpi')
 source=(ftp://ftp.hdfgroup.org/HDF5/releases/${_pkgname}-${pkgver}/src/${_pkgname}-${pkgver/_/-}.tar.bz2
 mpi.patch)
 sha1sums=('8414ca0e6ff7d08e423955960d641ec5f309a55f'
