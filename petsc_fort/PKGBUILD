@@ -1,23 +1,23 @@
 # Maintainer: Myles English <myles at rockhead dot biz>
 pkgname=petsc_fort
 _pkgname=petsc
-pkgver=3.4.4
+pkgver=3.5.0
 pkgrel=1
 _config=arch-linux2-cxx-opt
 # if --with-debugging=yes is set then PETSC_ARCH is automatically set to
 #"arch-linux2-cxx-debug" for some things, so the _config should be changed too
 #_config=arch-linux2-cxx-debug
 pkgdesc="Portable, extensible toolkit for scientific computation"
-arch=('any')
+arch=('i686' 'x86_64')
 url="http://www.mcs.anl.gov/petsc/petsc-as"
 license=('MIT compatible')
 options=('staticlibs')
 provides=('petsc')
-depends=('python2' 'openmpi' 'boost' 'blas' 'lapack')
+depends=('valgrind' 'bison' 'flex' 'cmake' 'python2' 'openmpi' 'boost' 'blas' 'lapack')
 makedepends=('gcc' 'gcc-fortran')
 install=petsc.install
 source=(http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${_pkgname}-${pkgver/_/-}.tar.gz)
-md5sums=('7edbc68aa6d8d6a3295dd5f6c2f6979d')
+md5sums=('a6b80eca36d9a38ef951573732d1c301')
 
 _install_dir=/opt/petsc/${_config}
 
@@ -36,11 +36,11 @@ build() {
 	find ${srcdir} -name "*" -type f -exec \
 	sed -i 's#\(/usr/bin/env \|/usr/bin/\)python[2-3]*#\1python2#' {} \;
 
-	CONFOPTS="--with-shared-libraries --with-clanguage=C++ --COPTFLAGS=-O2 --CXXOPTFLAGS=-O2"
+	CONFOPTS="--with-shared-libraries=1 --with-clanguage=C++ --COPTFLAGS=-O2 --CXXOPTFLAGS=-O2"
 	CONFOPTS="${CONFOPTS} --with-fortran-datatypes --FOPTFLAGS=-O2"
 
 	# External downloads
-	for external_pkg in ptscotch scalapack metis parmetis superlu mumps pastix hypre umfpack; do
+	for external_pkg in ptscotch scalapack metis parmetis superlu mumps pastix hypre suitesparse; do
 		CONFOPTS="${CONFOPTS} --download-${external_pkg}=yes"
 	done
 
@@ -55,8 +55,6 @@ build() {
 		--prefix=${pkgdir}${_install_dir} \
 		--PETSC_ARCH=${_config} \
 		${CONFOPTS}
-
-	echo $CONFOPTS
 
 	make ${MAKEFLAGS} PETSC_DIR=${_build_dir} PETSC_ARCH=${_config} all
 }
