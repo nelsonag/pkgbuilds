@@ -1,7 +1,7 @@
 # Maintainer: Myles English <myles at rockhead dot biz>
 pkgname=petsc_fort
 _pkgname=petsc
-pkgver=3.5.0
+pkgver=3.5.2
 pkgrel=1
 _config=arch-linux2-cxx-opt
 # if --with-debugging=yes is set then PETSC_ARCH is automatically set to
@@ -17,7 +17,7 @@ depends=('valgrind' 'bison' 'flex' 'cmake' 'python2' 'openmpi' 'boost' 'blas' 'l
 makedepends=('gcc' 'gcc-fortran')
 install=petsc.install
 source=(http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${_pkgname}-${pkgver/_/-}.tar.gz)
-md5sums=('a6b80eca36d9a38ef951573732d1c301')
+md5sums=('ad170802b3b058b5deb9cd1f968e7e13')
 
 _install_dir=/opt/petsc/${_config}
 
